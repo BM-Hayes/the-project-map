@@ -7,9 +7,7 @@
   --badge: #2f4a3a;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html,
 body {
@@ -21,9 +19,7 @@ body {
   font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
 }
 
-body {
-  line-height: 1.5;
-}
+body { line-height: 1.5; }
 
 a {
   color: var(--accent);
@@ -31,9 +27,7 @@ a {
   text-underline-offset: 3px;
 }
 
-a:hover {
-  color: var(--ink);
-}
+a:hover { color: var(--ink); }
 
 .shell {
   max-width: 42rem;
@@ -91,9 +85,7 @@ nav.routes {
   font-size: 0.95rem;
 }
 
-ul.plain {
-  padding-left: 1.15rem;
-}
+ul.plain { padding-left: 1.15rem; }
 
 code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -124,10 +116,7 @@ code {
   color: var(--muted);
 }
 
-.filter-chip {
-  margin: 0;
-  font-size: 0.95rem;
-}
+.filter-chip { margin: 0; font-size: 0.95rem; }
 
 .map-nav {
   display: flex;
@@ -141,7 +130,7 @@ code {
   min-height: 70vh;
 }
 
-iframe.map-canvas {
+.map-canvas {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -183,30 +172,45 @@ iframe.map-canvas {
   background: transparent;
   text-align: left;
   font: inherit;
-  text-decoration: none;
+  cursor: pointer;
 }
 
-.site-row span {
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
+.site-row span { color: var(--muted); font-size: 0.85rem; }
 .site-row.on,
-.site-row:hover {
+.site-row:hover { background: #fffdf8; }
+
+.popup {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 2;
+  width: min(22rem, calc(100% - 1.5rem));
   background: #fffdf8;
+  border: 1px solid var(--rule);
+  padding: 0.9rem 1rem;
 }
 
-.suggest {
-  display: grid;
-  gap: 0.85rem;
-  margin-top: 1rem;
+.badge-row {
+  display: flex;
+  gap: 0.6rem;
+  margin: 0 0 0.35rem;
+  font-size: 0.85rem;
+  color: var(--muted);
 }
 
-.suggest label {
-  display: grid;
-  gap: 0.3rem;
+.badge { color: var(--badge); letter-spacing: 0.04em; }
+
+.text-btn {
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
 }
 
+.suggest { display: grid; gap: 0.85rem; margin-top: 1rem; }
+.suggest label { display: grid; gap: 0.3rem; }
 .suggest input,
 .suggest textarea {
   font: inherit;
@@ -214,7 +218,6 @@ iframe.map-canvas {
   border: 1px solid var(--rule);
   background: #fffdf8;
 }
-
 .suggest button {
   width: fit-content;
   font: inherit;
