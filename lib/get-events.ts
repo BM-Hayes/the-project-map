@@ -18,8 +18,10 @@ export async function getPublishedEvents(): Promise<PublicEvent[]> {
   try {
     const query = new URL(`${url}/rest/v1/events`);
     query.searchParams.set("published", "eq.true");
-    query.searchParams.set("starts_at", `gte.${now.toISOString()}`);
-    query.searchParams.set("starts_at", `lte.${until.toISOString()}`);
+    query.searchParams.set(
+      "and",
+      `(starts_at.gte.${now.toISOString()},starts_at.lte.${until.toISOString()})`,
+    );
     query.searchParams.set("select", "id,title,body_name,starts_at,agenda_url,plain_summary");
     query.searchParams.set("order", "starts_at.asc");
     const response = await fetch(query, {
