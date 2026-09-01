@@ -5,7 +5,7 @@
 Map-first public filings tracker for large energy and water-touching projects.
 Not a news site. Not a campaign. Not Weekend Atlas.
 
-Stack: Next.js (App Router, TypeScript) · Mapbox GL · Supabase · Vercel.
+Stack: Next.js (App Router, TypeScript) · Mapbox GL · MapLibre fallback · Supabase · Vercel.
 Separate GitHub repo, Vercel project (`the-project-map`), and Supabase project
 from `weekend-atlas`.
 
@@ -18,7 +18,7 @@ Default geography: Darlington County, South Carolina. County is a filter, not th
 
 ## Routes
 
-- `/` — map (home; holding page until the map path is live)
+- `/` — map (home)
 - `/site/[slug]` — project dossier
 - `/week` — next 14 days, text/printable
 - `/suggest` — anonymous tip into `review_queue`
@@ -36,9 +36,11 @@ Default geography: Darlington County, South Carolina. County is a filter, not th
 
 ## Status
 
-- Domain reserved: theprojectmap.com (do not attach until holding page is live)
+- Domain reserved: theprojectmap.com (do not attach until a public holding/map page is verified live)
 - Vercel project: `the-project-map` (team hayes-clan)
-- App: Next.js holding page + route stubs
+- App: Next.js map slice + GeoJSON seed + dossier shell
+- Mapbox token and Supabase keys stay in Vercel env / KeePass. Never commit them.
+- Without a Mapbox token the map uses OpenFreeMap via MapLibre so the slice is visible.
 
 ## Sister-site rule
 
