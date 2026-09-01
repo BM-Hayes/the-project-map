@@ -5,31 +5,56 @@ import { getOrCreatePin } from "@/lib/pin";
 
 export default function SuggestForm() {
   const [pin, setPin] = useState("");
-  const [status, setStatus] = useState<"idle" | "queued" | "blocked">("idle");
+  const [status, setStatus] = useState<"idle" | "queued" | "blocked" | "error">("idle");
 
   useEffect(() => {
     setPin(getOrCreatePin());
   }, []);
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const source_url = String(data.get("source_url") ?? "");
+    if (!source_url) {
+      setStatus("blocked");
+      return;
+    }
     const payload = {
       pin,
       name: String(data.get("name") ?? ""),
       county: String(data.get("county") ?? "darlington"),
-      source_url: String(data.get("source_url") ?? ""),
+      source_url,
       note: String(data.get("note") ?? ""),
       intended_table: "review_queue",
       auto_publish: false,
     };
-    if (!payload.source_url) {
-      setStatus("blocked");
-      return;
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (url && key) {
+      const response = await fetch(`${url}/rest/v1/review_queue`, {
+        method: "POST",
+        headers: {
+          apikey: key,
+          Authorization: `Bearer ${key}`,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({
+          kind: "suggest",
+          source_url,
+          status: "pending",
+          payload,
+        }),
+      });
+      if (!response.ok) {
+        setStatus("error");
+        return;
+      }
+    } else {
+      const storageKey = "tpm_review_queue_local";
+      const prior = JSON.parse(window.localStorage.getItem(storageKey) ?? "[]") as unknown[];
+      window.localStorage.setItem(storageKey, JSON.stringify([payload, ...prior]));
     }
-    const key = "tpm_review_queue_local";
-    const prior = JSON.parse(window.localStorage.getItem(key) ?? "[]") as unknown[];
-    window.localStorage.setItem(key, JSON.stringify([payload, ...prior]));
     setStatus("queued");
     event.currentTarget.reset();
   }
@@ -53,18 +78,18 @@ export default function SuggestForm() {
         <textarea name="note" rows={4} maxLength={2000} />
       </label>
       <p className="meta">
-        Writes <code>review_queue</code> only. Official URL required before any
-        later publish. Pin {pin ? pin.slice(0, 8) : "…"}.
+        Writes <code>review_queue</code> only. Official URL required. Pin{" "}
+        {pin ? pin.slice(0, 8) : "…"}.
       </p>
       <button type="submit">Queue tip</button>
       {status === "queued" ? (
-        <p className="note">
-          Held locally until the separate Supabase project accepts inserts into{" "}
-          <code>review_queue</code>. Not published.
-        </p>
+        <p className="note">Queued for review. Not published.</p>
       ) : null}
       {status === "blocked" ? (
         <p className="note">Official source URL is required.</p>
+      ) : null}
+      {status === "error" ? (
+        <p className="note">Queue insert failed. Check Supabase RLS / anon key.</p>
       ) : null}
     </form>
   );

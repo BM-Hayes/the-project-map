@@ -1,0 +1,82 @@
+-- Published Darlington seed. Official / public sources only.
+insert into public.sites (
+  slug, name, site_type, stage, badge, county, state, mw, acres, applicant,
+  lat, lng, source_url, source_label, summary, published
+) values
+(
+  'robinson-solar-center',
+  'Robinson Solar Center',
+  'solar',
+  'application',
+  'official',
+  'darlington',
+  'SC',
+  76,
+  345,
+  'Duke Energy Progress',
+  34.417114,
+  -80.17435,
+  'https://www.duke-energy.com/RobinsonSolarCenter',
+  'Duke Energy project page',
+  '76 MWac solar PV and associated 230 kV tie on company-owned land next to Robinson Nuclear Plant and the Darlington CT plant.',
+  true
+),
+(
+  'darlington-solar-llc',
+  'Darlington Solar, LLC',
+  'solar',
+  'operating',
+  'official',
+  'darlington',
+  'SC',
+  10,
+  null,
+  'Darlington Solar, LLC',
+  34.32,
+  -79.917,
+  'https://www.eia.gov/electricity/data/eia860/',
+  'EIA-860 plant 60993',
+  'Operating 10 MW photovoltaic plant at 808 E. Billy Farrow Hwy, Darlington.',
+  true
+),
+(
+  'hb-robinson',
+  'H.B. Robinson Steam Electric Plant',
+  'generation',
+  'operating',
+  'official',
+  'darlington',
+  'SC',
+  null,
+  null,
+  'Duke Energy Progress',
+  34.400556,
+  -80.151389,
+  'https://www.nrc.gov/docs/ML1915/ML19155A087.pdf',
+  'NRC FSAR site location',
+  'Operating generation on the southwest shore of Lake Robinson, northwest Darlington County.',
+  true
+),
+(
+  'tedder-solar',
+  'Tedder Solar',
+  'solar',
+  'operating',
+  'official',
+  'darlington',
+  'SC',
+  2,
+  null,
+  'Tedder Solar',
+  34.30181,
+  -79.92446,
+  'https://www.eia.gov/electricity/data/eia860/',
+  'EIA-860 plant 62315',
+  'Operating 2 MW photovoltaic plant near Rogers Road and Harry Byrd Highway, Darlington.',
+  true
+)
+on conflict (slug) do update set
+  name = excluded.name,
+  published = true,
+  lat = excluded.lat,
+  lng = excluded.lng;
