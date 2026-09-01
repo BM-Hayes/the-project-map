@@ -13,7 +13,7 @@ export async function getPublishedEvents(): Promise<PublicEvent[]> {
   if (!url || !key) return [];
 
   const now = new Date();
-  const until = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+  const until = new Date(now.getTime() + 45 * 24 * 60 * 60 * 1000);
 
   try {
     const query = new URL(`${url}/rest/v1/events`);
@@ -26,7 +26,7 @@ export async function getPublishedEvents(): Promise<PublicEvent[]> {
     query.searchParams.set("order", "starts_at.asc");
     const response = await fetch(query, {
       headers: { apikey: key, Authorization: `Bearer ${key}` },
-      next: { revalidate: 120 },
+      next: { revalidate: 60 },
     });
     if (!response.ok) return [];
     const rows = (await response.json()) as Array<Record<string, unknown>>;

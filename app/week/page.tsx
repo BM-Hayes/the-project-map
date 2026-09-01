@@ -25,13 +25,13 @@ export default async function WeekPage() {
   return (
     <main className="shell">
       <p className="wordmark">The Project Map</p>
-      <h1>Next 14 days</h1>
+      <h1>Upcoming dates</h1>
       <p className="lede">
-        Hearings, comment windows, and other public dates. Empty if nothing is
-        published. No invented calendars.
+        Hearings, comment windows, and other public dates in the next 45 days.
+        Empty if nothing is published. No invented calendars.
       </p>
       {events.length === 0 ? (
-        <p className="meta">No published events in the next 14 days.</p>
+        <p className="meta">No published events in the next 45 days.</p>
       ) : (
         <ul className="plain">
           {events.map((event) => (
@@ -54,8 +54,8 @@ export default async function WeekPage() {
         </ul>
       )}
       <div className="note">
-        Add a row in Supabase <code>events</code> with <code>published = true</code>{" "}
-        and a future <code>starts_at</code>. Unpublished rows never appear here.
+        This page reads <code>events</code> only. <code>review_queue</code> rows never
+        appear here. published must be true and starts_at must be in the next 45 days.
       </div>
       <nav className="routes" aria-label="Primary">
         <Link href="/">Map</Link>
