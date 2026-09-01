@@ -5,8 +5,9 @@
 Map-first public filings tracker for large energy and water-touching projects.
 Not a news site. Not a campaign. Not Weekend Atlas.
 
-Stack (planned): Next.js · Mapbox GL · Supabase · Vercel.
-Separate GitHub repo, Vercel project, and Supabase project from `weekend-atlas`.
+Stack: Next.js (App Router, TypeScript) · Mapbox GL · Supabase · Vercel.
+Separate GitHub repo, Vercel project (`the-project-map`), and Supabase project
+from `weekend-atlas`.
 
 ## What this is
 
@@ -17,18 +18,27 @@ Default geography: Darlington County, South Carolina. County is a filter, not th
 
 ## Routes
 
-- `/` — map (home)
+- `/` — map (home; holding page until the map path is live)
 - `/site/[slug]` — project dossier
 - `/week` — next 14 days, text/printable
 - `/suggest` — anonymous tip into `review_queue`
 - `/about` — scope, sources, what this is not
 
-## Status — 2026-09-01
+## Locked product rules
 
-- Domain reserved: theprojectmap.com
-- Repo created: this repository
-- App: holding page only until the map path is scaffolded in the build thread
-- Do not attach the custom domain until a holding page is live on Vercel
+- Map is the home page.
+- Anonymous pin in localStorage. No account in v1.
+- Tracker tone. No petitions, donate, or campaign chrome.
+- Default filter: Darlington County, SC.
+- Badges: official | verified | community | unverified.
+- `/suggest` writes `review_queue` only. No auto-promote to published sites.
+- Official source URL required before a site is published.
+
+## Status
+
+- Domain reserved: theprojectmap.com (do not attach until holding page is live)
+- Vercel project: `the-project-map` (team hayes-clan)
+- App: Next.js holding page + route stubs
 
 ## Sister-site rule
 
