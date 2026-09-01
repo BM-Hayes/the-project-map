@@ -11,6 +11,17 @@ This file is the handoff from the strategy thread.
 5. Mapbox token lives in KeePass / Vercel env only. Never commit it.
 6. Do not point theprojectmap.com at Vercel until the holding page is live and checked.
 
+## Vercel project settings (required)
+
+The first preview was a static file from `public-holding/`. That folder is retired.
+
+- Framework Preset: **Next.js**
+- Root Directory: **blank** (repository root). Not `public-holding`.
+- Output Directory: **blank** (Next default)
+- Install Command: `npm install`
+- Build Command: `next build`
+- Then **Deployments → Redeploy** the latest `main` commit.
+
 ## Locked product rules
 
 - Map is the home page.
