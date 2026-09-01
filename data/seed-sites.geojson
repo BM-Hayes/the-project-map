@@ -1,0 +1,49 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-80.17435, 34.417114] },
+      "properties": {
+        "slug": "robinson-solar-center",
+        "name": "Robinson Solar Center",
+        "siteType": "solar",
+        "stage": "application",
+        "badge": "official"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-79.917, 34.32] },
+      "properties": {
+        "slug": "darlington-solar-llc",
+        "name": "Darlington Solar, LLC",
+        "siteType": "solar",
+        "stage": "operating",
+        "badge": "official"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-80.151389, 34.400556] },
+      "properties": {
+        "slug": "hb-robinson",
+        "name": "H.B. Robinson Steam Electric Plant",
+        "siteType": "generation",
+        "stage": "operating",
+        "badge": "official"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-79.92446, 34.30181] },
+      "properties": {
+        "slug": "tedder-solar",
+        "name": "Tedder Solar",
+        "siteType": "solar",
+        "stage": "operating",
+        "badge": "official"
+      }
+    }
+  ]
+}
