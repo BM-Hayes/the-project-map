@@ -1,0 +1,13 @@
+-- Hand-entered example. Replace title/date/URL with a real public agenda.
+-- Leave published = false until the source URL is checked.
+
+-- insert into public.events (
+--   title, body_name, starts_at, agenda_url, plain_summary, published
+-- ) values (
+--   'Planning Commission',
+--   'Darlington County',
+--   '2026-09-15T23:00:00Z',
+--   'https://www.darcosc.com/',
+--   'Check the posted agenda before treating this as a project hearing.',
+--   false
+-- );
