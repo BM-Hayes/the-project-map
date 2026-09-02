@@ -1,11 +1,12 @@
 import type { Site } from "./types";
+import { SEED_CORE } from "./seed-core";
 import { SEED_PLANNED } from "./seed-planned";
 
 /**
  * Offline seed. Public coordinates and official/public filings only.
  * Used when Supabase is empty or unset.
  */
-export const SEED_SITES: Site[] = SEED_PLANNED;
+export const SEED_SITES: Site[] = [...SEED_CORE, ...SEED_PLANNED];
 
 export const DEFAULT_VIEW = {
   county: "darlington",
