@@ -92,6 +92,24 @@ insert into public.sites (
   'EIA-860 plant 62315',
   'Operating 2 MW photovoltaic plant near Rogers Road and Harry Byrd Highway, Darlington.',
   true
+),
+(
+  'pit-stop-solar',
+  'Pit Stop Solar',
+  'solar',
+  'approved',
+  'official',
+  'darlington',
+  'SC',
+  75,
+  1100,
+  'Pit Stop Solar, LLC',
+  34.281528,
+  -79.927611,
+  'https://www.darcosc.com/government/county_council/recently_approved_ordinances.php',
+  'Darlington County recently approved ordinances',
+  '845–1,152 acre solar farm approved via FILOT ordinance 24-11 and MCIP ordinance 24-12, July 1 2024. Near Branhams Airport Road. Planning Commission approval challenged in lawsuit. ~75 MW and ~$115 million FILOT investment.',
+  true
 )
 on conflict (slug) do update set
   name = excluded.name,
