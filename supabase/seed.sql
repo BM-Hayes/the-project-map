@@ -108,7 +108,7 @@ insert into public.sites (
   -79.927611,
   'https://www.darcosc.com/government/county_council/recently_approved_ordinances.php',
   'Darlington County recently approved ordinances',
-  '845–1,152 acre solar farm approved via FILOT ordinance 24-11 and MCIP ordinance 24-12, July 1 2024. Near Branhams Airport Road. Planning Commission approval challenged in lawsuit. ~75 MW and ~$115 million FILOT investment.',
+  'Utility-scale solar near Branhams Airport. FILOT 24-11 / MCIP 24-12 (July 1, 2024), ~75 MW, ~1,100 acres, ~$115M. February 2026 Planning Commission approval appealed as Deborah Martin et al. v. Darlington County et al., 2026CP1600286 (filed March 20, 2026).',
   true
 )
 on conflict (slug) do update set

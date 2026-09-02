@@ -152,19 +152,35 @@ export const SEED_SITES: Site[] = [
       "https://www.darcosc.com/government/county_council/recently_approved_ordinances.php",
     sourceLabel: "Darlington County recently approved ordinances",
     summary:
-      "Utility-scale solar farm near Branhams Airport / Branham Airport Road, southwest of Darlington. County Council adopted FILOT ordinance 24-11 and Florence multi-county industrial park ordinance 24-12 on July 1, 2024, for Pit Stop Solar, LLC, a project the county previously called Project Scout. The fee agreement commits about $115 million in new investment over a 40-year term at a 6% assessment ratio with fixed millage and special source revenue credits. Local reporting and court coverage put the project at nearly 75 MW on about 1,100 acres. Planning Commission site approval (reported February) is under lawsuit; neighbors challenged process and buffering at a December 3, 2025 planning hearing. Pin is Branhams Airport (FAA 6J7), the public landmark used in county and press descriptions — not a surveyed array centroid.",
+      "Utility-scale solar farm near Branhams Airport / Branham Airport Road, southwest of Darlington. County Council adopted FILOT ordinance 24-11 and Florence multi-county industrial park ordinance 24-12 on July 1, 2024, for Pit Stop Solar, LLC (formerly Project Scout). The fee agreement commits about $115 million in new investment. Local reporting puts the project at nearly 75 MW on about 1,100 acres. Planning Commission approved the solar energy system in February 2026. Neighbors appealed that approval as Deborah Martin et al. v. Darlington County South Carolina et al., C/A 2026CP1600286, filed March 20, 2026. Pin is Branhams Airport (FAA 6J7) — not a surveyed array centroid.",
     notes: [
-      "Acreage is not settled in one official figure. WPDE (Aug. 3, 2026) says approximately 1,100 acres; SCNow (Jan. 8, 2026) headlined 845 acres; a May 2026 public post citing a county project list used 1,152.82 acres. Seed uses 1,100 as the figure tied to the Planning Commission / lawsuit coverage. Replace with parcel GIS when the county map or site plan is extracted.",
+      "Lawsuit caption (Trellis / Darlington Common Pleas): Deborah Martin, plaintiff, et al. v. Darlington County South Carolina, defendant, et al., Case No. 2026CP1600286. Filed March 20, 2026. Status listed Appealed as of the July 22, 2026 Trellis refresh. Named defendants on the public index include Darlington County, Darlington County Council, and Bnrg Renewables Innovatus Solar. Full party list and the complaint itself sit behind the clerk / paid dockets — do not invent additional plaintiff names.",
+      "WPDE (Aug. 3, 2026), citing court filings: plaintiffs say the Planning Commission failed to issue findings of fact, conclusions of law, or any explanation of why the project met county development standards, and that the commission adopted a staff recommendation without an independent written basis, making judicial review impossible under South Carolina law.",
+      "Planning Commission: regular meetings are the third Wednesday at 4 p.m. at the Courthouse Annex/EMS Building. The third Wednesday of February 2026 was February 18. WPDE and later council coverage say the Pit Stop solar energy system was approved in February. The county agendas-and-minutes page exists, but a February 2026 minutes PDF was not posted in a crawlable form as of this Sept. 2, 2026 pass. A Dec. 3, 2025 planning permitting-completion hearing (400+ mailed notices within 1,320 feet) is the last documented public session before the February vote.",
+      "Acreage is not one official figure. WPDE lawsuit coverage: ~1,100 acres. SCNow Jan. 8, 2026 headline: 845 acres. A May 2026 circulating county project list used 1,152.82 acres at Branham's Airport. Seed keeps 1,100 as the figure tied to the Planning Commission / lawsuit coverage. Ordinance 24-11 defines Project Property only by reference to the attached Fee Agreement (Exhibit A); that exhibit is marked [Attached] and is not in the public third-reading PDF, so TMS numbers are still missing.",
+      "GIS: county Parcel Viewer and the county solar GIS item are linked below. Until Exhibit A or a site-plan shapefile is extracted, the pin stays on 6J7 (34.281528, -79.927611), the public landmark used in county and press descriptions. Do not draw an array polygon from the airport point.",
       "75 MW is from WPDE lawsuit coverage ('nearly 75 megawatts'), not an EIA-860 listing. No plant ID found as of Sept. 2, 2026.",
-      "FILOT / MCIP closed July 1, 2024. That is a tax deal, not a building permit. Planning Commission later approved the solar energy system; that approval is the subject of the lawsuit alleging missing findings of fact and conclusions of law.",
-      "Parent developer behind Pit Stop Solar, LLC is not confirmed from public filings reviewed here. Do not treat the county code name Project Scout as proof it is Scout Clean Energy.",
-      "No next public meeting is on file in this seed. The Aug. 2026 moratorium discussion does not stay the existing lawsuit.",
+      "FILOT / MCIP closed July 1, 2024 (first reading May 6, second June 3, third and public hearing July 1). That is a tax deal, not a building permit. Ordinance 24-11 names Pit Stop Solar, LLC as sponsor, formerly Project Scout, and states the Project 'plans to establish a utility scale solar facility in the County' with approximately $115,000,000 in new investment. WPDE quotes the 6% assessment ratio and fixed millage for the FILOT term.",
+      "Bnrg Renewables Innovatus Solar appears as a named defendant on the March 2026 appeal index. That is the first public-index link between Pit Stop and BNRG/Innovatus. It is not yet a Secretary of State or PSC filing proving corporate parentage — keep the applicant field as Pit Stop Solar, LLC.",
+      "No next public meeting is on file in this seed. The Aug. 2026 nine-month solar/wind moratorium discussion is aimed at new applications and does not stay 2026CP1600286.",
     ],
     documents: [
       {
-        title: "Darlington County Council agenda — Ord. 24-11 FILOT and Ord. 24-12 MCIP third reading (Project Scout / Pit Stop Solar, LLC)",
-        url: "https://cms1files.revize.com/darlingtoncounty/July%201,%202024,%20agenda.pdf",
-        postedOn: "2024-07-01",
+        title: "Trellis — Deborah Martin et al. v. Darlington County South Carolina et al. (2026CP1600286)",
+        url: "https://trellis.law/case/45031/2026cp1600286/deborah-martin-plaintiff-et-al-vs-darlington-county-south-carolina-defendant-et-al",
+        postedOn: "2026-03-20",
+      },
+      {
+        title: "Trellis — Darlington County appeals index listing the Martin caption",
+        url: "https://trellis.law/coverage/south-carolina/darlington/appeals",
+      },
+      {
+        title: "Darlington County Planning Commission — agendas and minutes",
+        url: "https://www.darcosc.com/government/boards_commissions/planning_commission/agendas_minutes.php",
+      },
+      {
+        title: "Darlington County Planning Commission roster and meeting rule (3rd Wednesdays, 4 p.m.)",
+        url: "https://www.darcosc.com/government/boards_commissions/planning_commission/index.php",
       },
       {
         title: "Ordinance 24-11 — FILOT agreement, Project Scout / Pit Stop Solar, LLC (third-reading version)",
@@ -193,6 +209,14 @@ export const SEED_SITES: Site[] = [
         title: "WPDE — Planning Commission approval lawsuit and proposed 9-month solar/wind moratorium",
         url: "https://wpde.com/news/local/darlington-county-considers-9-month-moratorium-on-new-solar-and-wind-projects",
         postedOn: "2026-08-03",
+      },
+      {
+        title: "Darlington County Parcel Viewer",
+        url: "https://www.arcgis.com/apps/View/index.html?appid=4834a19bc5394061806a275be631c91e",
+      },
+      {
+        title: "Darlington County Parcel Viewer (ArcGIS item)",
+        url: "https://www.arcgis.com/home/item.html?id=82a7300ec67e48d4a30eea3ae6678a34",
       },
       {
         title: "Darlington County official solar GIS map",
