@@ -47,10 +47,109 @@
     },
     {
       "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-80.05812, 34.34957] },
+      "properties": {
+        "slug": "jefferson-solar",
+        "name": "Jefferson Solar",
+        "siteType": "solar",
+        "stage": "operating",
+        "badge": "official"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-79.86858, 34.26799] },
+      "properties": {
+        "slug": "birch-solar",
+        "name": "Birch Solar",
+        "siteType": "solar",
+        "stage": "operating",
+        "badge": "official"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-80.02481, 34.36982] },
+      "properties": {
+        "slug": "chapman-solar",
+        "name": "Chapman Solar",
+        "siteType": "solar",
+        "stage": "operating",
+        "badge": "official"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-80.08149, 34.3368] },
+      "properties": {
+        "slug": "1634-solar",
+        "name": "1634 Solar",
+        "siteType": "solar",
+        "stage": "operating",
+        "badge": "official"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-79.8875, 34.27441] },
+      "properties": {
+        "slug": "redwing-solar",
+        "name": "Redwing Solar",
+        "siteType": "solar",
+        "stage": "operating",
+        "badge": "official"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [-79.92446, 34.30181] },
       "properties": {
         "slug": "tedder-solar",
         "name": "Tedder Solar",
+        "siteType": "solar",
+        "stage": "operating",
+        "badge": "official"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-79.84462, 34.52394] },
+      "properties": {
+        "slug": "watauga-solar",
+        "name": "Watauga Solar",
+        "siteType": "solar",
+        "stage": "operating",
+        "badge": "official"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-79.87255, 34.26891] },
+      "properties": {
+        "slug": "ashley-solar",
+        "name": "Ashley Solar",
+        "siteType": "solar",
+        "stage": "operating",
+        "badge": "official"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-80.02161, 34.37191] },
+      "properties": {
+        "slug": "marshall-solar",
+        "name": "Marshall Solar",
+        "siteType": "solar",
+        "stage": "operating",
+        "badge": "official"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [-80.0273, 34.3702] },
+      "properties": {
+        "slug": "luz-solar",
+        "name": "Luz Solar",
         "siteType": "solar",
         "stage": "operating",
         "badge": "official"
