@@ -17,33 +17,88 @@ type MapLike = {
   getCanvas: () => HTMLCanvasElement;
 };
 
-type Props = { sites: Site[]; token: string };
-
-function loadMapbox(): Promise<{
+type MapEngine = {
   Map: new (o: object) => MapLike;
   NavigationControl: new (o: object) => object;
-  accessToken: string;
-}> {
-  const w = window as Window & { mapboxgl?: { Map: new (o: object) => MapLike; NavigationControl: new (o: object) => object; accessToken: string } };
-  if (w.mapboxgl) return Promise.resolve(w.mapboxgl);
+  accessToken?: string;
+};
+
+type Props = { sites: Site[]; token: string };
+
+const MAPBOX_STYLE = "mapbox://styles/mapbox/streets-v12";
+const FREEMAP_STYLE = "https://tiles.openfreemap.org/styles/bright";
+
+function loadScript(src: string, id: string): Promise<void> {
+  if (document.getElementById(id)) return Promise.resolve();
   return new Promise((resolve, reject) => {
-    const cssId = "mapbox-gl-css";
-    if (!document.getElementById(cssId)) {
-      const link = document.createElement("link");
-      link.id = cssId;
-      link.rel = "stylesheet";
-      link.href = "https://api.mapbox.com/mapbox-gl-js/v3.14.0/mapbox-gl.css";
-      document.head.appendChild(link);
-    }
     const script = document.createElement("script");
-    script.src = "https://api.mapbox.com/mapbox-gl-js/v3.14.0/mapbox-gl.js";
+    script.id = id;
+    script.src = src;
     script.async = true;
-    script.onload = () => {
-      if (w.mapboxgl) resolve(w.mapboxgl);
-      else reject(new Error("mapboxgl missing"));
-    };
-    script.onerror = () => reject(new Error("mapbox script failed"));
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error(src + " failed"));
     document.head.appendChild(script);
+  });
+}
+
+function loadCss(href: string, id: string) {
+  if (document.getElementById(id)) return;
+  const link = document.createElement("link");
+  link.id = id;
+  link.rel = "stylesheet";
+  link.href = href;
+  document.head.appendChild(link);
+}
+
+async function loadMapbox(): Promise<MapEngine> {
+  loadCss("https://api.mapbox.com/mapbox-gl-js/v3.14.0/mapbox-gl.css", "mapbox-gl-css");
+  await loadScript("https://api.mapbox.com/mapbox-gl-js/v3.14.0/mapbox-gl.js", "mapbox-gl-js");
+  const engine = (window as Window & { mapboxgl?: MapEngine }).mapboxgl;
+  if (!engine) throw new Error("mapboxgl missing");
+  return engine;
+}
+
+async function loadMaplibre(): Promise<MapEngine> {
+  loadCss("https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css", "maplibre-gl-css");
+  await loadScript("https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js", "maplibre-gl-js");
+  const engine = (window as Window & { maplibregl?: MapEngine }).maplibregl;
+  if (!engine) throw new Error("maplibregl missing");
+  return engine;
+}
+
+function attachSites(map: MapLike, sites: Site[], onHit: (site: Site) => void) {
+  map.addSource("sites", { type: "geojson", data: sitesToGeoJSON(sites) });
+  map.addLayer({
+    id: "sites-halo",
+    type: "circle",
+    source: "sites",
+    paint: {
+      "circle-radius": 11,
+      "circle-color": "#f4efe6",
+      "circle-opacity": 0.9,
+    },
+  });
+  map.addLayer({
+    id: "sites-dots",
+    type: "circle",
+    source: "sites",
+    paint: {
+      "circle-radius": 7,
+      "circle-color": "#8a4b1f",
+      "circle-stroke-width": 2,
+      "circle-stroke-color": "#fffdf8",
+    },
+  });
+  map.on("click", "sites-dots", (event: { features?: Array<{ properties?: { slug?: string } }> }) => {
+    const slug = event.features?.[0]?.properties?.slug;
+    const hit = sites.find((site) => site.slug === slug);
+    if (hit) onHit(hit);
+  });
+  map.on("mouseenter", "sites-dots", () => {
+    map.getCanvas().style.cursor = "pointer";
+  });
+  map.on("mouseleave", "sites-dots", () => {
+    map.getCanvas().style.cursor = "";
   });
 }
 
@@ -52,56 +107,60 @@ export default function ProjectMap({ sites, token }: Props) {
   const mapRef = useRef<MapLike | null>(null);
   const [active, setActive] = useState<Site | null>(null);
   const [pin, setPin] = useState("");
-  const [engine, setEngine] = useState(token ? "loading" : "osm");
+  const [engine, setEngine] = useState(token ? "loading" : "loading");
 
   useEffect(() => {
     setPin(getOrCreatePin());
   }, []);
 
   useEffect(() => {
-    if (!token || !node.current) return;
+    if (!node.current) return;
     let cancelled = false;
 
-    loadMapbox()
-      .then((mapboxgl) => {
+    async function boot() {
+      try {
+        const gl = token ? await loadMapbox() : await loadMaplibre();
         if (cancelled || !node.current) return;
-        mapboxgl.accessToken = token;
-        const map = new mapboxgl.Map({
+        if (token && gl.accessToken !== undefined) gl.accessToken = token;
+        const map = new gl.Map({
           container: node.current,
-          style: "mapbox://styles/mapbox/light-v11",
+          style: token ? MAPBOX_STYLE : FREEMAP_STYLE,
           center: [DEFAULT_VIEW.lng, DEFAULT_VIEW.lat],
           zoom: DEFAULT_VIEW.zoom,
+          antialias: true,
+          attributionControl: true,
         });
-        map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
-        map.on("load", () => {
-          map.addSource("sites", { type: "geojson", data: sitesToGeoJSON(sites) });
-          map.addLayer({
-            id: "sites-dots",
-            type: "circle",
-            source: "sites",
-            paint: {
-              "circle-radius": 7,
-              "circle-color": "#8a4b1f",
-              "circle-stroke-width": 2,
-              "circle-stroke-color": "#f4efe6",
-            },
-          });
-          map.on("click", "sites-dots", (event: { features?: Array<{ properties?: { slug?: string } }> }) => {
-            const slug = event.features?.[0]?.properties?.slug;
-            const hit = sites.find((site) => site.slug === slug);
-            if (hit) setActive(hit);
-          });
-          map.on("mouseenter", "sites-dots", () => {
-            map.getCanvas().style.cursor = "pointer";
-          });
-          map.on("mouseleave", "sites-dots", () => {
-            map.getCanvas().style.cursor = "";
-          });
-        });
+        map.addControl(new gl.NavigationControl({ showCompass: false }), "top-right");
+        map.on("load", () => attachSites(map, sites, setActive));
         mapRef.current = map;
-        setEngine("mapbox");
-      })
-      .catch(() => setEngine("osm"));
+        setEngine(token ? "mapbox" : "maplibre");
+      } catch {
+        if (cancelled) return;
+        if (token) {
+          try {
+            const gl = await loadMaplibre();
+            if (cancelled || !node.current) return;
+            const map = new gl.Map({
+              container: node.current,
+              style: FREEMAP_STYLE,
+              center: [DEFAULT_VIEW.lng, DEFAULT_VIEW.lat],
+              zoom: DEFAULT_VIEW.zoom,
+              antialias: true,
+            });
+            map.addControl(new gl.NavigationControl({ showCompass: false }), "top-right");
+            map.on("load", () => attachSites(map, sites, setActive));
+            mapRef.current = map;
+            setEngine("maplibre");
+          } catch {
+            setEngine("failed");
+          }
+        } else {
+          setEngine("failed");
+        }
+      }
+    }
+
+    boot();
 
     return () => {
       cancelled = true;
@@ -114,10 +173,6 @@ export default function ProjectMap({ sites, token }: Props) {
     setActive(site);
     mapRef.current?.flyTo({ center: [site.lng, site.lat], zoom: 12, essential: true });
   }
-
-  const bbox = "-80.35,34.15,-79.70,34.52";
-  const osm = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${DEFAULT_VIEW.lat}%2C${DEFAULT_VIEW.lng}`;
-  const showOsm = !token || engine === "osm";
 
   return (
     <div className="map-app">
@@ -133,8 +188,10 @@ export default function ProjectMap({ sites, token }: Props) {
         </nav>
       </header>
       <div className="map-stage">
-        {token ? <div ref={node} className="map-canvas" /> : null}
-        {showOsm ? <iframe className="map-canvas" title="Darlington County map" src={osm} /> : null}
+        <div ref={node} className="map-canvas" />
+        {engine === "failed" ? (
+          <p className="map-fail">Map tiles failed to load. Refresh, or check the style URL.</p>
+        ) : null}
         <aside className="map-list" aria-label="Seed sites">
           <p className="list-kicker">Published seed · Darlington</p>
           {sites.map((site) => (
@@ -174,10 +231,12 @@ export default function ProjectMap({ sites, token }: Props) {
       <footer className="map-foot">
         <span>
           {engine === "mapbox"
-            ? "Mapbox light · public filings only"
-            : engine === "loading"
-              ? "Loading Mapbox…"
-              : "OSM fallback · Mapbox token missing or blocked"}
+            ? "Mapbox Streets · public filings only"
+            : engine === "maplibre"
+              ? "OpenFreeMap Bright · public filings only"
+              : engine === "loading"
+                ? "Loading map…"
+                : "Map failed to load"}
         </span>
         <span>Pin {pin ? pin.slice(0, 8) : "…"}</span>
       </footer>
