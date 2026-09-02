@@ -8,8 +8,12 @@ export type IngestHit = {
 
 const GRANICUS =
   "https://darcosc.granicus.com/ViewPublisher.php?view_id=1";
-const PLANNING =
+const COUNTY_PC =
   "https://www.darcosc.com/government/boards_commissions/planning_commission/agendas_minutes.php";
+const HARTSVILLE_NOTICE =
+  "https://www.hartsvillesc.gov/home/showpublisheddocument/477";
+const CITY_DARLINGTON_PC =
+  "https://www.cityofdarlington.com/planning-commission/";
 
 function parseMonthDayYear(text: string): Date | null {
   const match = text.match(
@@ -20,11 +24,41 @@ function parseMonthDayYear(text: string): Date | null {
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
-function thirdWednesday(year: number, monthIndex: number) {
+function nthWeekdayUTC(
+  year: number,
+  monthIndex: number,
+  weekday: number,
+  nth: number,
+  hourUtc: number,
+) {
   const first = new Date(Date.UTC(year, monthIndex, 1));
-  const wedOffset = (3 - first.getUTCDay() + 7) % 7;
-  const day = 1 + wedOffset + 14;
-  return new Date(Date.UTC(year, monthIndex, day, 20, 0, 0));
+  const offset = (weekday - first.getUTCDay() + 7) % 7;
+  const day = 1 + offset + (nth - 1) * 7;
+  return new Date(Date.UTC(year, monthIndex, day, hourUtc, 0, 0));
+}
+
+function lastWeekdayUTC(
+  year: number,
+  monthIndex: number,
+  weekday: number,
+  hourUtc: number,
+) {
+  const last = new Date(Date.UTC(year, monthIndex + 1, 0));
+  const back = (last.getUTCDay() - weekday + 7) % 7;
+  return new Date(Date.UTC(year, monthIndex, last.getUTCDate() - back, hourUtc, 0, 0));
+}
+
+function upcomingMonths() {
+  const today = new Date();
+  const out: Array<{ year: number; month: number }> = [];
+  for (let i = 0; i < 2; i += 1) {
+    const month = today.getUTCMonth() + i;
+    out.push({
+      year: today.getUTCFullYear() + Math.floor(month / 12),
+      month: month % 12,
+    });
+  }
+  return out;
 }
 
 export async function collectAgendaHits(): Promise<IngestHit[]> {
@@ -64,19 +98,50 @@ export async function collectAgendaHits(): Promise<IngestHit[]> {
     });
   }
 
-  const today = new Date();
-  for (let i = 0; i < 2; i += 1) {
-    const month = today.getUTCMonth() + i;
-    const year = today.getUTCFullYear() + Math.floor(month / 12);
-    const date = thirdWednesday(year, month % 12);
-    if (date.getTime() + 24 * 60 * 60 * 1000 < now) continue;
-    hits.push({
-      title: "Planning Commission (scheduled 3rd Wednesday, 4 p.m.)",
-      bodyName: "Darlington County",
-      startsAt: date.toISOString(),
-      sourceUrl: PLANNING,
-      note: "Schedule rule from the official Planning Commission agendas page. Do not publish until that month's agenda PDF is posted.",
-    });
+  for (const { year, month } of upcomingMonths()) {
+    const countyPc = nthWeekdayUTC(year, month, 3, 3, 20);
+    if (countyPc.getTime() + 86400000 >= now) {
+      hits.push({
+        title: "Planning Commission (3rd Wednesday, 4 p.m.)",
+        bodyName: "Darlington County",
+        startsAt: countyPc.toISOString(),
+        sourceUrl: COUNTY_PC,
+        note: "Official county schedule rule. Do not publish until that month's agenda PDF is posted.",
+      });
+    }
+
+    const hartCouncil = nthWeekdayUTC(year, month, 2, 2, 21);
+    if (hartCouncil.getTime() + 86400000 >= now) {
+      hits.push({
+        title: "City Council (2nd Tuesday, 5:30 p.m.)",
+        bodyName: "City of Hartsville",
+        startsAt: hartCouncil.toISOString(),
+        sourceUrl: HARTSVILLE_NOTICE,
+        note: "Official 2026 annual meeting notice. Confirm the posted agenda before publish.",
+      });
+    }
+
+    const hartPc = lastWeekdayUTC(year, month, 1, 21);
+    if (hartPc.getTime() + 86400000 >= now) {
+      hits.push({
+        title: "Planning Commission (last Monday, 5:30 p.m.)",
+        bodyName: "City of Hartsville",
+        startsAt: hartPc.toISOString(),
+        sourceUrl: HARTSVILLE_NOTICE,
+        note: "Pattern from the official 2026 annual notice. Confirm the posted agenda before publish.",
+      });
+    }
+
+    const cityPc = nthWeekdayUTC(year, month, 3, 3, 13);
+    if (cityPc.getTime() + 86400000 >= now) {
+      hits.push({
+        title: "Planning Commission (3rd Wednesday, 9 a.m.)",
+        bodyName: "City of Darlington",
+        startsAt: cityPc.toISOString(),
+        sourceUrl: CITY_DARLINGTON_PC,
+        note: "Official Planning Commission page. Do not publish until that month's agenda is posted.",
+      });
+    }
   }
 
   return hits;
