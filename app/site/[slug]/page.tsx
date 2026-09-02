@@ -2,17 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BADGE_LABEL, STAGE_LABEL, TYPE_LABEL } from "@/lib/labels";
-import { getSeedSite } from "@/lib/seed-sites";
+import { SEED_SITES, getSeedSite } from "@/lib/seed-sites";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
-  return [
-    { slug: "robinson-solar-center" },
-    { slug: "darlington-solar-llc" },
-    { slug: "hb-robinson" },
-    { slug: "tedder-solar" },
-  ];
+  return SEED_SITES.map((site) => ({ slug: site.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -51,9 +46,31 @@ export default async function SitePage({ params }: Props) {
         </li>
         <li>Next public date: {site.nextEventOn ?? "none on file"}</li>
       </ul>
+      {site.notes && site.notes.length > 0 ? (
+        <ul className="plain">
+          {site.notes.map((note) => (
+            <li key={note}>{note}</li>
+          ))}
+        </ul>
+      ) : null}
+      {site.documents && site.documents.length > 0 ? (
+        <>
+          <h2>Source documents</h2>
+          <ul className="plain">
+            {site.documents.map((doc) => (
+              <li key={doc.url}>
+                <a href={doc.url} rel="noreferrer" target="_blank">
+                  {doc.title}
+                </a>
+                {doc.postedOn ? ` · ${doc.postedOn}` : ""}
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : null}
       <div className="note">
-        Dossier shell. Documents and events tables stay empty until the separate
-        Supabase project is wired. Unpublished community tips never appear here.
+        Meetings and new filings stay empty until separately entered. Unpublished
+        community tips never appear here.
       </div>
       <nav className="routes" aria-label="Primary">
         <Link href="/">Map</Link>

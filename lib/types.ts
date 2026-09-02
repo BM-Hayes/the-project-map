@@ -18,6 +18,12 @@ export type SiteStage =
 
 export type SourceBadge = "official" | "verified" | "community" | "unverified";
 
+export type SiteDocument = {
+  title: string;
+  url: string;
+  postedOn?: string;
+};
+
 export type Site = {
   slug: string;
   name: string;
@@ -35,4 +41,6 @@ export type Site = {
   sourceLabel: string;
   nextEventOn?: string;
   summary: string;
+  notes?: string[];
+  documents?: SiteDocument[];
 };

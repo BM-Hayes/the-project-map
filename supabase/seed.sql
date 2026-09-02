@@ -22,6 +22,24 @@ insert into public.sites (
   true
 ),
 (
+  'lotus-solar',
+  'Lotus Solar',
+  'solar',
+  'approved',
+  'official',
+  'darlington',
+  'SC',
+  75,
+  644,
+  'Lotus Solar, LLC (Pine Gate Renewables)',
+  34.447832,
+  -80.10356,
+  'https://www.interconnection.fyi/eia/project/68337-lotus',
+  'EIA-860M plant 68337',
+  'Proposed 75 MW photovoltaic plant east of Hartsville. EIA: approvals received, not under construction. Listed COD October 1, 2027.',
+  true
+),
+(
   'darlington-solar-llc',
   'Darlington Solar, LLC',
   'solar',
@@ -79,4 +97,11 @@ on conflict (slug) do update set
   name = excluded.name,
   published = true,
   lat = excluded.lat,
-  lng = excluded.lng;
+  lng = excluded.lng,
+  stage = excluded.stage,
+  mw = excluded.mw,
+  acres = excluded.acres,
+  applicant = excluded.applicant,
+  source_url = excluded.source_url,
+  source_label = excluded.source_label,
+  summary = excluded.summary;
