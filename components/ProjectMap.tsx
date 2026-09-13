@@ -10,6 +10,7 @@ import type { Site } from "@/lib/types";
 type MapLike = {
   flyTo: (o: { center: [number, number]; zoom: number; essential?: boolean }) => void;
   remove: () => void;
+  resize?: () => void;
   addSource: (id: string, source: object) => void;
   addLayer: (layer: object) => void;
   addControl: (control: object, pos?: string) => void;
@@ -108,6 +109,7 @@ export default function ProjectMap({ sites, token }: Props) {
   const [active, setActive] = useState<Site | null>(null);
   const [pin, setPin] = useState("");
   const [engine, setEngine] = useState(token ? "loading" : "loading");
+  const [listOpen, setListOpen] = useState(false);
 
   useEffect(() => {
     setPin(getOrCreatePin());
@@ -131,7 +133,10 @@ export default function ProjectMap({ sites, token }: Props) {
           attributionControl: true,
         });
         map.addControl(new gl.NavigationControl({ showCompass: false }), "top-right");
-        map.on("load", () => attachSites(map, sites, setActive));
+        map.on("load", () => {
+          attachSites(map, sites, setActive);
+          map.resize?.();
+        });
         mapRef.current = map;
         setEngine(token ? "mapbox" : "maplibre");
       } catch {
@@ -148,7 +153,10 @@ export default function ProjectMap({ sites, token }: Props) {
               antialias: true,
             });
             map.addControl(new gl.NavigationControl({ showCompass: false }), "top-right");
-            map.on("load", () => attachSites(map, sites, setActive));
+            map.on("load", () => {
+              attachSites(map, sites, setActive);
+              map.resize?.();
+            });
             mapRef.current = map;
             setEngine("maplibre");
           } catch {
@@ -169,8 +177,14 @@ export default function ProjectMap({ sites, token }: Props) {
     };
   }, [token, sites]);
 
+  useEffect(() => {
+    const t = window.setTimeout(() => mapRef.current?.resize?.(), 80);
+    return () => window.clearTimeout(t);
+  }, [listOpen]);
+
   function focusSite(site: Site) {
     setActive(site);
+    setListOpen(false);
     mapRef.current?.flyTo({ center: [site.lng, site.lat], zoom: 12, essential: true });
   }
 
@@ -192,8 +206,18 @@ export default function ProjectMap({ sites, token }: Props) {
         {engine === "failed" ? (
           <p className="map-fail">Map tiles failed to load. Refresh, or check the style URL.</p>
         ) : null}
-        <aside className="map-list" aria-label="Seed sites">
-          <p className="list-kicker">Published seed · Darlington</p>
+        <aside className={listOpen ? "map-list open" : "map-list"} aria-label="Seed sites">
+          <div className="list-head">
+            <p className="list-kicker">Published seed · Darlington · {sites.length}</p>
+            <button
+              type="button"
+              className="list-toggle"
+              onClick={() => setListOpen((open) => !open)}
+              aria-expanded={listOpen}
+            >
+              {listOpen ? "Hide list" : "Show list"}
+            </button>
+          </div>
           {sites.map((site) => (
             <button
               key={site.slug}
